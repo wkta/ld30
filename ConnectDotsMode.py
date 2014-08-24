@@ -8,16 +8,14 @@ from pygame.locals import *
 from EndGameMode import *
 
 
-( STEP_PROMPT,  STEP_DEST ) = range(2)
 
-( ACT_EXIT, ACT_TEST_LK, ACT_ADD_LK, ACT_SEL_DECT ) = range(4)
+( ACT_EXIT, ACT_TEST_LK, ACT_ADD_LK, ACT_SEL_DEST ) = range(4)
 
 class ConnectDotsMode( GameMode ):
 
     def __init__(self, universe):
         self.game_lost = False
         self.coord_pl_tested =None
-        self.current_step = STEP_PROMPT
         self.act = None
 
         #init selection
@@ -51,24 +49,17 @@ class ConnectDotsMode( GameMode ):
                 self.act= ACT_EXIT
                 return
 
-            if self.current_step==STEP_PROMPT and (event.type == MOUSEBUTTONDOWN ):
+            if (event.type == MOUSEBUTTONDOWN ):
                 self.vect_m = pygame.mouse.get_pos()
-                self.act= ACT_ADD_LK
-               
+                if( event.button==1): #left click
+                    self.act = ACT_ADD_LK
+                elif( event.button==3): #right click
+                    self.act = ACT_SEL_DEST
+                return
 
-            if self.current_step==STEP_PROMPT and (event.type == MOUSEMOTION ):
+            if (event.type == MOUSEMOTION ):
                 self.vect_m = pygame.mouse.get_pos()
                 self.act= ACT_TEST_LK
-
-
-            if(self.current_step== STEP_DEST) and (event.type== MOUSEBUTTONDOWN):
-                (mx,my) = pygame.mouse.get_pos()
-                for planet in self.l_planets:
-                    if(not planet.getId() in self.universe.getIdsRP()  ):
-                        continue
-                    #if mouse-over other planet
-                    if(planet.isClicked(mx,my) and planet.getId()!=self.id_p_selected ):
-                        self.new_dest = planet.getId()
                 
 
     def update(self, gm_model):
@@ -78,21 +69,26 @@ class ConnectDotsMode( GameMode ):
             gm_model.signalQuit()
             return
 
-        if self.act==ACT_ADD_LK: 
+        if self.act==ACT_ADD_LK or self.act==ACT_SEL_DEST: 
+            # retrieving clickd pl coordinates
             id_p = det_planet_clicked( self.l_planets, self.vect_m)
-            if(id_p!=None):
-                #retrieve pl coordinates
-                for pl in self.l_planets:
-                    if pl.getId()==id_p:
-                        coord_pl = pl.x, pl.y
-                        break
-                #adding link
-                gm_model.addIdRP( id_p )
-                gm_model.addLink( coord_pl )
-                self.current_step = STEP_DEST
-            else:
-                #click in the void!
-                self.act=None
+            coord_pl = None
+            is_reachable = False
+            for pl in self.l_planets:
+                if pl.getId()==id_p:
+                    coord_pl = pl.x, pl.y
+                    is_reachable = (id_p in self.universe.getIdsRP()  )
+                    break
+
+            if coord_pl!=None:
+                if self.act==ACT_ADD_LK:
+                    #adding link
+                    gm_model.addIdRP( id_p )
+                    gm_model.addLink( coord_pl )
+                if self.act==ACT_SEL_DEST and is_reachable:
+                    #we save the new destination only if its a reachable planet
+                    self.new_dest = id_p
+
 
         if self.act==ACT_TEST_LK:
             id_p = det_planet_clicked( self.l_planets, self.vect_m)
@@ -113,8 +109,7 @@ class ConnectDotsMode( GameMode ):
             self.game_lost = True
             return
 
-
-        if(self.current_step==STEP_DEST and self.new_dest!=None):
+        if(  self.new_dest!=None):
             self.id_p_selected = self.new_dest
             gm_model.setIdPlayersPlanet( self.new_dest)
             self.reboot_landing = True
@@ -136,15 +131,10 @@ class ConnectDotsMode( GameMode ):
             pygame.draw.line(window, LIGHT_BLUE, lk[0], lk[1] )
 
         
-        if(self.current_step==STEP_PROMPT):
-            addmsg_line(window, "Choose a planet to build a teleporter.")
+        addmsg_line(window, "Build a teleporter (l-click) or move to a new destination (r-click)")
 
-            if(self.coord_pl_tested!=None):
-                pygame.draw.line(window, LIGHT_BLUE,
-                    gm_model.getCurrentCoord(),
-                    self.coord_pl_tested )
-            return
+        if(self.coord_pl_tested!=None):
+            pygame.draw.line(window, LIGHT_BLUE,
+                gm_model.getCurrentCoord(),
+                self.coord_pl_tested )
     
-        if(self.current_step== STEP_DEST):
-            addmsg_line(window, "Where do you want to travel now?")
-
