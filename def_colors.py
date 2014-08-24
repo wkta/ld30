@@ -1,0 +1,12 @@
+
+#colors
+WHITE = (255 , 255, 255)
+RED = (255 , 0, 0)
+BLACK = (0,0,0)
+GREEN = ( 0, 255, 0)
+BLUE = ( 0, 0, 255)
+DARK_BLUE = ( 0, 0, 100)
+LIGHT_BLUE = ( 100, 100,255)
+BLUE_GRAY = ( 64, 64, 128)
+DARK_GREEN = ( 10, 50, 10)
+
