@@ -9,11 +9,12 @@ from EndGameMode import *
 
 
 
-( ACT_EXIT, ACT_TEST_LK, ACT_ADD_LK, ACT_SEL_DEST ) = range(4)
+( ACT_EXIT, ACT_TEST_LK, ACT_ADD_LK, ACT_SEL_DEST, ACT_WARP ) = range(5)
 
 class ConnectDotsMode( GameMode ):
 
     def __init__(self, universe):
+        self.warp_possible = False
         self.game_lost = False
         self.coord_pl_tested =None
         self.act = None
@@ -41,6 +42,7 @@ class ConnectDotsMode( GameMode ):
     
         self.new_dest = None
         self.reboot_landing = False
+        self.super_reboot = False
 
 
     def handle(self, events):
@@ -48,6 +50,9 @@ class ConnectDotsMode( GameMode ):
             if event.type == QUIT:
                 self.act= ACT_EXIT
                 return
+
+            if (event.type == KEYDOWN ):
+                self.act = ACT_WARP
 
             if (event.type == MOUSEBUTTONDOWN ):
                 self.vect_m = pygame.mouse.get_pos()
@@ -63,6 +68,9 @@ class ConnectDotsMode( GameMode ):
                 
 
     def update(self, gm_model):
+        if( gm_model.hasMaxTeleporters() ):
+            self.warp_possible = True
+
         from gameobjects.vector2 import Vector2
 
         if(self.act==ACT_EXIT):
@@ -82,17 +90,24 @@ class ConnectDotsMode( GameMode ):
 
             if coord_pl!=None:
                 if self.act==ACT_ADD_LK:
-                    #adding link
-                    gm_model.addIdRP( id_p )
-                    gm_model.addLink( coord_pl )
-                if self.act==ACT_SEL_DEST and is_reachable:
+                    if not gm_model.hasMaxTeleporters():
+                        #adding link
+                        gm_model.addLink( coord_pl, id_p )
+                if self.act==ACT_SEL_DEST and is_reachable and id_p!=gm_model.getIdPlayersPlanet() :
                     #we save the new destination only if its a reachable planet
                     self.new_dest = id_p
+
+        if self.act==ACT_WARP:
+            gm_model.pause()
+            gm_model.resetLinks()
+            self.reboot_landing = True
+            self.super_reboot = True
+                        
 
 
         if self.act==ACT_TEST_LK:
             id_p = det_planet_clicked( self.l_planets, self.vect_m)
-            if(id_p!=None):
+            if(id_p!=None and not gm_model.hasMaxTeleporters() ):
                 #retrieve pl coordinates
                 for pl in self.l_planets:
                     if pl.getId()==id_p:
@@ -123,6 +138,9 @@ class ConnectDotsMode( GameMode ):
             return EndGameMode()
 
         from LandingMode import LandingMode
+        if(self.super_reboot):
+            return LandingMode( True)
+
         return LandingMode()
 
     def drawScreen(self, window, gm_model):

@@ -28,22 +28,32 @@ class World:
     def gameExit(self):
         return self.__game_exit
 
+    def resetLinks(self):
+        self.__assoc_id_lk = dict()
+        self.__ids_reachable_planets = list()
+        #there are no teleport links in the beginning
+        self.__links = list()
+
     def __init__(self):
+        self.__info_o2 = None
+        self.__info_food = None
+        self.__info_water = None
+        self.__bars_init = False
+        self.paused = False
+
         self.__lost = False
         self.__rewards = dict()
-
         self.__game_exit = False;
 
         self.__bars_init = False
         self.__l_planets = list()
         self.__nb_planets = 0
-        self.__ids_reachable_planets = list()
+
+        self.resetLinks()
 
         #the player has not landed at the beginning
         self.__id_p_player = None
 
-        #there are no teleport links in the beginning
-        self.__links = list()
 
         #populating the list of nodes+associated radii
         while( self.__nb_planets < NB_PLANETS):
@@ -90,6 +100,10 @@ class World:
     def getLinks(self):
         return self.__links
 
+    def isPaused(self):
+        return self.paused
+
+
     def isPlayerHere(self, planet):
         return planet.getId()==self.__id_p_player
 
@@ -100,6 +114,7 @@ class World:
     def setIdPlayersPlanet(self,p_id): 
         if not (p_id in self.__ids_reachable_planets):
             self.__ids_reachable_planets.append(p_id )
+
         found = False
         for pl in self.__l_planets:
             if pl.getId()==p_id:
@@ -121,11 +136,14 @@ class World:
         self.__info_o2.pause() 
         self.__info_food.pause() 
         self.__info_water.pause()
+        self.paused = True
  
     def unpause(self):
         self.__info_o2.unpause() 
         self.__info_food.unpause() 
         self.__info_water.unpause()
+        self.paused = False
+ 
         
 
 
@@ -158,15 +176,29 @@ class World:
         res.append( compl("Food:")+ str(self.__info_food) )
         return res
 
-    def addLink(self, lk_dest ):
+    def addLink(self, lk_dest, id_p  ):
         ''' lk_dest represents a pair of coord for the dest planet'''
-        self.__links.append( (self.current_coords, lk_dest)  )
 
-    def getLinks(self):
-        return self.__links
+        tmp_lk = (self.current_coords, lk_dest) 
+        if( id_p in self.__assoc_id_lk.keys() and
+            tmp_lk in self.__assoc_id_lk[id_p ]  ):
+            return
 
-    def addIdRP(self, id_p):
-        self.__ids_reachable_planets.append(id_p)
+        if(len(self.__links) >= NB_EDGES ):
+            raise Exception('max nb edges')
+
+        #add a new edge
+        try:
+            self.__assoc_id_lk[ id_p ]
+        except Exception:
+            self.__assoc_id_lk[ id_p ]= list()
+        self.__assoc_id_lk[ id_p ].append( tmp_lk)
+        self.__links.append( tmp_lk )
+        self.__ids_reachable_planets.append( id_p )
+        
+
+    def hasMaxTeleporters(self):
+        return (len(self.__links) >= NB_EDGES )
 
     def getIdsRP(self):
         return self.__ids_reachable_planets

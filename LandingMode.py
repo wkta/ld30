@@ -52,6 +52,9 @@ class LandingMode(GameMode ):
         return ConnectDotsMode( self.__saved_gm_model )
 
     def update(self, gm_model):
+        if( gm_model.isPaused()  ):
+            gm_model.unpause()
+
         if (self.act==ACT_EXIT):
             gm_model.signalQuit()
             return
