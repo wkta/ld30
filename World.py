@@ -4,8 +4,52 @@ from ProgressBar import *
 
 REWARDS = (REWARD_O2, REWARD_FOOD, REWARD_WATER) = range(3)
 
-'''this class models the world where the player is located'''
 class World:
+    '''this class models the world where the player is located'''
+
+    @classmethod
+    def __populate_universe(cls, pl_list ):
+        ''' populating the list of nodes+associated radii '''
+        while( len(pl_list) < NB_PLANETS):
+            tmp = Planet()
+            # if this doesnt fit our goals, we roll dices again!
+            while cls.__is_bad_pick(tmp,pl_list):
+                tmp = Planet()
+            pl_list.append(tmp)
+
+    @classmethod
+    def __is_bad_pick(cls, t_planet, pl_list):
+        if (t_planet.x+t_planet.rad>=DISP_W-1) or (t_planet.x-t_planet.rad<=0):
+            return True
+        if (t_planet.y+t_planet.rad>=DISP_H-1) or (t_planet.y-t_planet.rad<=BORDER_UP):
+            return True
+        for oth_planet in pl_list:
+            if t_planet.overlaps( oth_planet):
+                return True
+        return False
+
+
+    #
+    #   CONSTRUCTOR ---------------------------------------------
+    #
+    def __init__(self):
+        self.__info_o2 = None
+        self.__info_food = None
+        self.__info_water = None
+        self.__bars_init = False
+        self.paused = False
+        self.__lost = False
+        self.__rewards = dict()
+        self.__game_exit = False;
+        self.__bars_init = False
+        #the player has not landed at the beginning
+        self.__id_p_player = None
+
+        self.resetLinks()
+
+        self.__l_planets = list()
+        World.__populate_universe(  self.__l_planets )
+
 
     def signalQuit(self):
         self.__game_exit = True;
@@ -34,35 +78,6 @@ class World:
         #there are no teleport links in the beginning
         self.__links = list()
 
-    def __init__(self):
-        self.__info_o2 = None
-        self.__info_food = None
-        self.__info_water = None
-        self.__bars_init = False
-        self.paused = False
-
-        self.__lost = False
-        self.__rewards = dict()
-        self.__game_exit = False;
-
-        self.__bars_init = False
-        self.__l_planets = list()
-        self.__nb_planets = 0
-
-        self.resetLinks()
-
-        #the player has not landed at the beginning
-        self.__id_p_player = None
-
-
-        #populating the list of nodes+associated radii
-        while( self.__nb_planets < NB_PLANETS):
-            tmp = Planet()
-            # if this doesnt fit our goals, we roll dices again!
-            while tmp.is_bad_pick(self.__l_planets):
-                tmp = Planet()
-            self.__l_planets.append(tmp)
-            self.__nb_planets+=1
 
     def produceReward(self):
 
@@ -195,7 +210,7 @@ class World:
         self.__assoc_id_lk[ id_p ].append( tmp_lk)
         self.__links.append( tmp_lk )
         self.__ids_reachable_planets.append( id_p )
-        
+
 
     def hasMaxTeleporters(self):
         return (len(self.__links) >= NB_EDGES )

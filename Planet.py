@@ -16,7 +16,7 @@ class Planet(object):
         self.rad = random.choice( range( MIN_PLANET_RAD, MAX_PLANET_RAD) )
 
 	#return True/False whether the considered planet overlaps with another one
-    def __overlaps(self, t_planet):
+    def overlaps(self, t_planet):
         return ( euclidean( (t_planet.x,t_planet.y),(self.x,self.y) ) < self.rad+t_planet.rad+MIN_EMPTY_SPACE )
 
     def is_bad_pick( self,existing_planets) :
