@@ -1,3 +1,5 @@
-# Compiled source #
-###################
+# Compiled source
 *.pyc
+
+# Temporary vim files
+*.swp
