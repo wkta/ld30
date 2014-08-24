@@ -76,6 +76,11 @@ class LandingMode(GameMode ):
             self.act=None
 
         if self.current_step==STEP_WAITING:
+
+            # sounds of fight
+            pygame.time.delay(400)
+            SfxPlayer.fight()
+
             if not self.prog_bar.isFinished():
                 self.prog_bar.update()
             if self.prog_bar.isFinished():

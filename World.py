@@ -1,6 +1,7 @@
 from global_vars import *
 from Planet import *
 from ProgressBar import *
+from SfxPlayer import  *
 
 REWARDS = (REWARD_O2, REWARD_FOOD, REWARD_WATER) = range(3)
 
@@ -33,6 +34,10 @@ class World:
     #   CONSTRUCTOR ---------------------------------------------
     #
     def __init__(self):
+
+        # init sounds
+        SfxPlayer.start()
+
         self.__info_o2 = None
         self.__info_food = None
         self.__info_water = None
@@ -140,6 +145,10 @@ class World:
         if(not found ):
             raise Exception('cannot set players planet to '+str(p_id) )
 
+        #sound
+        SfxPlayer.teleport()
+
+
         #init bars if the player just landed
         if not self.__bars_init:
             self.__info_o2 = ProgressBar( RESSOURCE_DUR ,False)
@@ -210,6 +219,10 @@ class World:
         self.__assoc_id_lk[ id_p ].append( tmp_lk)
         self.__links.append( tmp_lk )
         self.__ids_reachable_planets.append( id_p )
+
+        #sound
+        SfxPlayer.buildStuff()
+    
 
 
     def hasMaxTeleporters(self):
