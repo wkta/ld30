@@ -9,12 +9,14 @@ class ProgressBar(object):
         self.paused =False
 
         if(duration_ms<=0):
-            raise ValueError('duration_ms should be positive!')
+            self.__finished = True
+        else:
+            self.__finished = False
+            #raise ValueError('duration_ms should be positive!')
 
         self.nb_units = SIZE_BARS
         self.__start_time = pygame.time.get_ticks()
         self.__end_time = self.__start_time+duration_ms
-        self.__finished = False
         self.gets_filled = gets_filled
         if(gets_filled):
             self.value = 0

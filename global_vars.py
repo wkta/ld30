@@ -7,7 +7,7 @@ DISP_H = 600
 GAME_CAPTION = 'Ludum Dare 30: Space addict'
 
 #procedurally generated env
-NB_PLANETS = 12
+NB_PLANETS = 18
 MIN_PLANET_RAD = 8
 MAX_PLANET_RAD = 64
 MIN_EMPTY_SPACE = 24.
@@ -15,8 +15,9 @@ BORDER_UP=90
 
 #game balance
 INCREMENT_DURATION = 4000
-RESSOURCE_DUR = 16000
-FIGHT_DUR = 1000
+RESSOURCE_DUR = 24000
+FIGHT_DUR = 1900
+#TELE_DUR = 500
 NB_EDGES = 5
 
 #user interface
@@ -50,7 +51,12 @@ def addmsg_line(window, txt,line=1):
     tmp_pos_y = (line-1)*info.get_size()[1] + 1
     blit_center(window, info, tmp_pos_y )
 
+gl_start_t = None
+gl_score = 0
+gl_final_score = None
+
 def generic_screen(window, gm_model):
+
     l_planets = gm_model.getPlanets()
     ids_r_planets = gm_model.getIdsRP()
     id_p_selected = gm_model.getIdPlayersPlanet()
@@ -72,6 +78,22 @@ def generic_screen(window, gm_model):
     tmp_l = gm_model.getInfo()
     for i in range(2,5):
         addmsg_line(window, tmp_l[i-2], i)
+
+    #compute and display score
+    global gl_start_t
+    global gl_score
+    global gl_final_score
+    if(gl_start_t==None):
+        gl_start_t = pygame.time.get_ticks()
+    score = (pygame.time.get_ticks() - gl_start_t )/100
+    if( gm_model.isGameLost() ):
+        if(gl_final_score==None ):
+            gl_final_score=score
+        score_rect = FontTool.draw_txt2( "score: "+str(gl_final_score) )
+    else:
+        score_rect = FontTool.draw_txt2( "score: "+str(score) )
+        
+    window.blit( score_rect,  (0,530)  )
 
 
 def compl(txt):

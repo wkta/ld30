@@ -11,9 +11,16 @@ from EndGameMode import *
 
 ( ACT_EXIT, ACT_TEST_LK, ACT_ADD_LK, ACT_SEL_DEST, ACT_WARP ) = range(5)
 
+known_pl = list()
+
 class ConnectDotsMode( GameMode ):
 
     def __init__(self, universe):
+        global known_pl
+        if len(known_pl)==0:
+            known_pl.append( universe.getIdPlayersPlanet() )
+        
+        self.peaceful_teleport =  True
         self.warp_possible = False
         self.game_lost = False
         self.coord_pl_tested =None
@@ -51,7 +58,9 @@ class ConnectDotsMode( GameMode ):
                 self.act= ACT_EXIT
                 return
 
-            if (event.type == KEYDOWN ):
+            if (event.type == KEYDOWN and event.key==K_RETURN ):
+                global known_pl
+                known_pl = list()
                 self.act = ACT_WARP
 
             if (event.type == MOUSEBUTTONDOWN ):
@@ -124,9 +133,16 @@ class ConnectDotsMode( GameMode ):
             self.game_lost = True
             return
 
+        global known_pl
         if(  self.new_dest!=None):
             self.id_p_selected = self.new_dest
             gm_model.setIdPlayersPlanet( self.new_dest)
+            if( self.new_dest in known_pl ):
+                self.peaceful_teleport = True
+            else:
+                known_pl.append( self.new_dest )
+                self.peaceful_teleport = False
+            self.act=None
             self.reboot_landing = True
             
 
@@ -141,7 +157,7 @@ class ConnectDotsMode( GameMode ):
         if(self.super_reboot):
             return LandingMode( True)
 
-        return LandingMode()
+        return LandingMode(False, self.peaceful_teleport )
 
     def drawScreen(self, window, gm_model):
         y_border = generic_screen(window, gm_model)

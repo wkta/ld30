@@ -17,14 +17,17 @@ from World import *
 
 class LandingMode(GameMode ):
 
-    def __init__(self, first_run=False):
+    def __init__(self, first_run=False, already_visited=False):
         self.game_lost = False
         self.act = None
         self.current_step = None
 
         if(not first_run):
             self.current_step = STEP_WAITING
-            self.prog_bar = ProgressBar()
+            if(not already_visited):
+                self.prog_bar = ProgressBar( FIGHT_DUR, "Fighting aliens:" ) 
+            else:
+                self.prog_bar = ProgressBar(  0)  #finished direct
         else:
             self.current_step = STEP_LAND
             self.prog_bar = None
@@ -75,11 +78,17 @@ class LandingMode(GameMode ):
             return
 
         if (self.act==ACT_CONFIRM_RESULT):
-            gm_model.unpause()
+            #gm_model.unpause()
             self.current_step = STEP_CHANGING_M
             self.act=None
 
         if self.current_step==STEP_WAITING:
+            if self.prog_bar.isFinished():
+                if( not gm_model.isGameLost() ):
+                    gm_model.produceReward()
+                    #gm_model.pause()
+                    self.current_step = STEP_RESULT
+                return
 
             # sounds of fight
             pygame.time.delay(400)
@@ -87,15 +96,10 @@ class LandingMode(GameMode ):
 
             if not self.prog_bar.isFinished():
                 self.prog_bar.update()
-            if self.prog_bar.isFinished():
-                if( not gm_model.isGameLost() ):
-                    gm_model.produceReward()
-                    gm_model.pause()
-                    self.current_step = STEP_RESULT
 
 
         #in all other cases, we have to update player infos
-        if(self.current_step!=STEP_LAND and self.current_step!=STEP_RESULT):
+        if(self.current_step!=STEP_LAND ):
             gm_model.update()
             if( gm_model.isGameLost() ):
                 self.game_lost = True
