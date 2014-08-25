@@ -35,9 +35,6 @@ class World:
     #
     def __init__(self):
 
-        # init sounds
-        SfxPlayer.start()
-
         self.__info_o2 = None
         self.__info_food = None
         self.__info_water = None
@@ -134,6 +131,9 @@ class World:
     def setIdPlayersPlanet(self,p_id): 
         if not (p_id in self.__ids_reachable_planets):
             self.__ids_reachable_planets.append(p_id )
+        else:
+            #sound
+            SfxPlayer.teleport()
 
         found = False
         for pl in self.__l_planets:
@@ -144,10 +144,6 @@ class World:
                 break
         if(not found ):
             raise Exception('cannot set players planet to '+str(p_id) )
-
-        #sound
-        SfxPlayer.teleport()
-
 
         #init bars if the player just landed
         if not self.__bars_init:

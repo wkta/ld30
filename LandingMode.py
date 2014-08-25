@@ -63,6 +63,10 @@ class LandingMode(GameMode ):
             tmp_id = det_planet_clicked( gm_model.getPlanets(), (self.mx,self.my) )
             if( tmp_id==None):
                 return
+
+            # init sounds + starting MUSIC !
+            SfxPlayer.start()
+
             #we change the current step only if a planet has been clicked
             gm_model.setIdPlayersPlanet( tmp_id )
             self.act=None

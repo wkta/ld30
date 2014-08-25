@@ -8,8 +8,9 @@ class SfxPlayer(object):
     def start(cls):
         #starting music
         cls.is_started = True
-        # pygame.mixer.music.load('assets/bg_music.mp3')
-        # pygame.mixer.music.play(-1, 0.0)
+        pygame.mixer.music.load('assets/loop_zik.mp3')
+        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.play(-1, 0.0)
 
         #loading sounds
         cls.sound_lib = {
