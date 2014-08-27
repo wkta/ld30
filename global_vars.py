@@ -14,9 +14,9 @@ MIN_EMPTY_SPACE = 24.
 BORDER_UP=90
 
 #game balance
-INCREMENT_DURATION = 4000
-RESSOURCE_DUR = 24000
-FIGHT_DUR = 1900
+INCREMENT_DURATION = 6000
+RESSOURCE_DUR = 18000
+FIGHT_DUR = 1400
 #TELE_DUR = 500
 NB_EDGES = 5
 
@@ -54,6 +54,14 @@ def addmsg_line(window, txt,line=1):
 gl_start_t = None
 gl_score = 0
 gl_final_score = None
+
+def reset_score():
+    global gl_start_t
+    global gl_score
+    global gl_final_score
+    gl_start_t = None
+    gl_score = 0
+    gl_final_score = None
 
 def generic_screen(window, gm_model):
 

@@ -20,8 +20,7 @@ class EndGameMode( GameMode ):
             if event.type == QUIT:
                 self.act = ACT_EXIT
 
-            if(self.step==STEP_BAD_NEWS and (
-                 event.type == pygame.MOUSEBUTTONDOWN or event.type==pygame.KEYDOWN) ):
+            if(self.step==STEP_BAD_NEWS and event.type==pygame.KEYDOWN ):
                 self.act = ACT_RESTART
 
     def update(self, gm_model):
@@ -36,6 +35,7 @@ class EndGameMode( GameMode ):
 
         if (self.act==ACT_RESTART):
             self.restart = True
+            gm_model.game_restart = True
 
     def drawScreen(self, window, gm_model):
         y_border = generic_screen(window, gm_model)
@@ -48,5 +48,6 @@ class EndGameMode( GameMode ):
         return self.restart
 
     def getNextMode(self):
-        from IntroMode import *
+        reset_score()
+        from IntroMode import IntroMode
         return IntroMode()

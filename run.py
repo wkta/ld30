@@ -15,6 +15,10 @@ mod = World()
 # game loop based on the current state
 while not mod.gameExit():
     st.handle( pygame.event.get() )
+
+    if(mod.gameRestart() ):
+        mod = World()
+
     # state update
     if(st.shouldChangeMode()):
         st = st.getNextMode()

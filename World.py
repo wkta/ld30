@@ -34,7 +34,7 @@ class World:
     #   CONSTRUCTOR ---------------------------------------------
     #
     def __init__(self):
-
+        self.game_restart = False
         self.__info_o2 = None
         self.__info_food = None
         self.__info_water = None
@@ -70,6 +70,8 @@ class World:
         if( self.__info_food.isFinished() ):
             return "You died of starvation!"
         
+    def gameRestart(self):
+        return self.game_restart
 
     def gameExit(self):
         return self.__game_exit

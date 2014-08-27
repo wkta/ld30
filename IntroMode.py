@@ -19,7 +19,7 @@ class IntroMode(GameMode ):
             if event.type == QUIT:
                 self.quit = True
                 return
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.KEYDOWN:
                 self.ready_to_play= True
 
     def shouldChangeMode(self):
@@ -55,20 +55,20 @@ class IntroMode(GameMode ):
         author = FontTool.draw_txt2("code - music - graphics by @spartangeek" )
         author2 = FontTool.draw_txt2("created for the Ludum Dare 30" )
 
-        tuto1= FontTool.draw_txt2( "The aim of this game is to gather ressources")
-        tuto2= FontTool.draw_txt2( "on various planets and survive as long as possible!")
+        tuto1= FontTool.draw_txt2( "Your goal is to conquer planets and gather various ressources")
+        tuto2= FontTool.draw_txt2( "Survive as long as possible! You can visit a planet several times")
 
         tuto3= FontTool.draw_txt2( "Use MOUSE with left/right clicks to teleport/build teleporters" )
-        tuto4= FontTool.draw_txt2( "hit SPACE key after visiting a planet to continue")
-        tuto5= FontTool.draw_txt2( "you have only 5 teleporter, hit ENTER to reclaim them all")
+        tuto4= FontTool.draw_txt2( "hit a key after visiting a planet to continue")
+        tuto5= FontTool.draw_txt2( "you have no more than 5 teleporter, hit ENTER to reclaim them")
 
         window.blit( title, (dx-146,185) )
-        window.blit(  author, (dx-146-32,310) )
-        window.blit(  author2, (dx-146-32,340) )
+        window.blit(  author, (dx-146-39,310) )
+        window.blit(  author2, (dx-146-39,340) )
 
-        window.blit( tuto1, (dx-146-128-32,380 +25) )
-        window.blit( tuto2, (dx-146-128-32,380 +50) )
+        window.blit( tuto1, (dx-146-128-39,380 +25) )
+        window.blit( tuto2, (dx-146-128-39,380 +50) )
 
-        window.blit( tuto3, (dx-146-128-32,380 +100) )
-        window.blit( tuto4, (dx-146-128-32,380 +125) )
-        window.blit( tuto5, (dx-146-128-32,380 +150) )
+        window.blit( tuto3, (dx-146-128-39,380 +100) )
+        window.blit( tuto4, (dx-146-128-39,380 +125) )
+        window.blit( tuto5, (dx-146-128-39,380 +150) )
