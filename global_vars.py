@@ -4,7 +4,7 @@ from def_colors import *
 
 DISP_W = 800
 DISP_H = 600
-GAME_CAPTION = 'Ludum Dare 30: Space addict'
+GAME_CAPTION = 'Space Addict: the game - LudumDare#30'
 
 #procedurally generated env
 NB_PLANETS = 18
