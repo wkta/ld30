@@ -80,9 +80,9 @@ class ProgressBar(object):
 
         #displays stars
         res = "["
-        for i in xrange(0,self.value):
+        for i in range(0,self.value):
             res += "x"
-        for i in xrange(self.value, self.nb_units):
+        for i in range(self.value, self.nb_units):
             res += " "
         res += "]"
 

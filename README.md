@@ -1,4 +1,8 @@
-ld30
+Space Addict - ld30
 ====
 
-a small game crafted in less than 48hrs for Ludum Dare 30
+A tiny homemade game, crafted solo in less than 48hrs during the Ludum Dare 30 jam.
+
+This game is fully compatible (tested) with:
+- Python 3.1 (r31:73574) win32
+- pygame 1.9.1release-svn2575

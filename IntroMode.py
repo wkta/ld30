@@ -48,7 +48,7 @@ class IntroMode(GameMode ):
                 ((dx,dy+0-32-8), (dx+145,dy+106-32-8), (dx+90,dy+277-32-8), (dx-90,dy+277-32-8), (dx-146,dy+106-32-8)))
 
         draw_penta(window, BLUE, 0)
-        for i in xrange(0,DISP_H-(dy+230) ,4):
+        for i in range(0,DISP_H-(dy+230) ,4):
             pygame.draw.line( window, BLUE_GRAY, (0,dy+230+i), (DISP_W-1,dy+230+i), 4)
 
         title = FontTool.draw_txt1("SPACE ADDICT")

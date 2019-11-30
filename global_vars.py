@@ -105,7 +105,7 @@ def generic_screen(window, gm_model):
 
 
 def compl(txt):
-    l_spaces = [ ' ' for i in xrange( TXT_B4_BARS_LEN- len(txt)) ]
+    l_spaces = [ ' ' for i in range( TXT_B4_BARS_LEN- len(txt)) ]
     spaces = ''.join(l_spaces)
     return txt+spaces
     

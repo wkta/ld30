@@ -1,5 +1,5 @@
 from math import sqrt
-from util import format_number
+from gameobjects.util import format_number
 
 class Vector2(object):
 
@@ -131,7 +131,7 @@ class Vector2(object):
         try:
             return self._v[index]
         except IndexError:
-            raise IndexError, "There are 2 values in this object, index should be 0 or 1"
+            raise IndexError("There are 2 values in this object, index should be 0 or 1")
 
     def __setitem__(self, index, value):
         """Sets a component as though the vector were a list."""
@@ -139,9 +139,9 @@ class Vector2(object):
         try:
             self._v[index] = 1.0 * value
         except IndexError:
-            raise IndexError, "There are 2 values in this object, index should be 0 or 1!"
+            raise IndexError("There are 2 values in this object, index should be 0 or 1!")
         except TypeError:
-            raise TypeError, "Must be a number"
+            raise TypeError("Must be a number")
 
 
     def __eq__(self, rhs):
@@ -344,5 +344,5 @@ class Vector2(object):
 if __name__ == "__main__":
 
     v1 = Vector2(1, 2)
-    print v1('yx')
-    print Vector2.from_points((5,5), (10,10))
+    print( v1('yx'))
+    print( Vector2.from_points((5,5), (10,10)))

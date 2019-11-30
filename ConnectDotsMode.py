@@ -6,7 +6,7 @@ import pygame
 from pygame.locals import *
 
 from EndGameMode import *
-
+from gameobjects.vector2 import Vector2
 
 
 ( ACT_EXIT, ACT_TEST_LK, ACT_ADD_LK, ACT_SEL_DEST, ACT_WARP ) = range(5)
@@ -79,8 +79,6 @@ class ConnectDotsMode( GameMode ):
     def update(self, gm_model):
         if( gm_model.hasMaxTeleporters() ):
             self.warp_possible = True
-
-        from gameobjects.vector2 import Vector2
 
         if(self.act==ACT_EXIT):
             gm_model.signalQuit()
